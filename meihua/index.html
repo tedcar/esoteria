@@ -605,15 +605,16 @@ function sTag(){
   const r=R(), fl=r.line, opts=[{v:'upper',label:'The upper tower'},{v:'lower',label:'The lower tower'}], correct=r.movingIsUpper?'upper':'lower';
   const hint=`Floor ${fl} is ${fl>3?'in the upper tower (floors 4, 5, 6)':'in the lower tower (floors 1, 2, 3)'}. The tower holding the breaking floor is <b>IT</b> (用, the matter). The other is <b>ME</b> (體, you).`;
   const a=ask('it',correct,opts,hint); const done=W.ans.it&&W.ans.it.done; const I=r.movingIsUpper;
-  const cols=r.lines.map((_,i)=>(i<3)===I?C[E.TRI[r.lower].el]:C[E.TRI[r.upper].el]);
+  const cols=r.lines.map((_,i)=>i<3?C[E.TRI[r.lower].el]:C[E.TRI[r.upper].el]);
   const fig=done?`<div class="card fadein row mid">${hexSVG(r.lines,{mv:fl,col:cols,tags:[{y:30,t:I?'IT 用':'ME 體',c:I?'#b3281a':'#2b1d10'},{y:134,t:I?'ME 體':'IT 用',c:I?'#2b1d10':'#b3281a'}]})}<div class="big">IT ${tn(r.use)}<br>ME ${tn(r.body)}<br><small>Hexagram ${r.primary.num} <span class="han">${r.primary.han}</span>. You never read the name. You read the two towers.</small></div></div>`:'';
   if(done&&!W._tagPlayed){ W._tagPlayed=1; Sound.init(); Sound.tower(r.body); Sound.tower(r.use,.5); }
   view().innerHTML=`<div class="wrap">${progress()}<section><h2><span class="stepno">5</span>TAG THEM <span class="han">體用</span></h2><p class="sub">Which tower holds floor ${fl}?</p>
   <div class="card">${a}</div>${fig}${nav(done)}</section></div>`; }
 
 /* 6 · three looks: start, middle, end */
-function sLooks(){
-  const r=R(), me=E.TRI[r.body].el;
+function sLooks(){ let g=0; while(sLooksDraw() && g++<5); }
+function sLooksDraw(){
+  const r=R(), me=E.TRI[r.body].el; const before=W.looksShown;
   const W4=[
     {k:'w0',t:'1 · START (the two towers)',it:r.use,rel:r.start,say:`ME ${tn(r.body)} against IT ${tn(r.use)}.`},
     {k:'w1',t:'2 · MIDDLE, the lower middle tower (互)',it:r.nuclear.lower,rel:r.middleLower,say:`Floors 2-3-4 make ${tn(r.nuclear.lower)} against ME ${tn(r.body)}.`},
@@ -633,7 +634,7 @@ function sLooks(){
     if(done&&!W['_p'+x.k]){ W['_p'+x.k]=1; Sound.init(); Sound.weigh(me,itEl,x.rel.key); }
     if(!done) allok=false; });
   const doneN=W4.filter(x=>W.ans[x.k]&&W.ans[x.k].done).length;
-  if(doneN>=W.looksShown && W.looksShown<4) W.looksShown=doneN+1;
+  if(doneN>=W.looksShown && W.looksShown<4){ W.looksShown=doneN+1; if(W.looksShown>before) return true; }
   const finished=doneN===4;
   view().innerHTML=`<div class="wrap">${progress()}<section><h2><span class="stepno">6</span>THREE LOOKS <span class="han">三象</span></h2><p class="sub">The same weighing, three times: start, middle, end. This is the whole reading. Five answers only: IT feeds ME · same · I beat IT · I feed IT · IT beats ME.</p>${html}${nav(finished,'Read it ▸')}</section></div>`;
   if(doneN>=W.looksShown-1 && doneN<4 && W.ans['w'+(W.looksShown-2)] && W.ans['w'+(W.looksShown-2)].done && !W['_sc'+W.looksShown]){ W['_sc'+W.looksShown]=1; setTimeout(()=>view().scrollBy({top:260,behavior:'smooth'}),350); } }
@@ -667,7 +668,7 @@ function sRead(){
   view().innerHTML=`<div class="wrap">${progress()}<section><h2><span class="stepno">7</span>THE READING <span class="han">斷</span></h2><p class="sub"><i>${esc(W.q)}</i></p>
   <div class="verdict ${v.pos?'pos':''} fadein"><div class="w">${v.word}</div><div class="small" style="margin-top:4px">${esc(T.en)} · ${r.primary.num} <span class="han">${r.primary.han}</span> → ${r.changedHex.num} <span class="han">${r.changedHex.han}</span></div></div>
   ${callRes?`<div class="card fadein">${callRes}</div>`:''}
-  <div class="card"><b>The figure, once more</b><div class="row mid">${hexSVG(r.lines,{mv:r.line,col:r.lines.map((_,i)=>(i<3)===r.movingIsUpper?C[E.TRI[r.lower].el]:C[E.TRI[r.upper].el])})}<div>ME ${tn(r.body)}<br>IT ${tn(r.use)}<br>Middle ${tn(r.nuclear.lower)} ${tn(r.nuclear.upper)}<br>End ${tn(r.changed)}</div></div></div>
+  <div class="card"><b>The figure, once more</b><div class="row mid">${hexSVG(r.lines,{mv:r.line,col:r.lines.map((_,i)=>i<3?C[E.TRI[r.lower].el]:C[E.TRI[r.upper].el])})}<div>ME ${tn(r.body)}<br>IT ${tn(r.use)}<br>Middle ${tn(r.nuclear.lower)} ${tn(r.nuclear.upper)}<br>End ${tn(r.changed)}</div></div></div>
   <div class="card"><b>The four weighings against ME</b><br>Start ${rel(r.start)}<br>Middle ${rel(r.middleLower)} and ${rel(r.middleUpper)}<br>End ${rel(r.end)}<br><small>Friends (feed or same): <b>${r.tally.friends}</b> · hitters: <b>${r.tally.hitters}</b> · I beat: ${r.tally.win} · I feed: ${r.tally.leak}</small></div>
   <div class="card"><b>The season</b> (卷二 衰旺論): ${SH}, the month of <span class="han">${mo.b}</span>. ME ${tn(r.body)} is <b>${strTxt}</b>.<br><small>Strong: spring Thunder and Wind, summer Fire, autumn Heaven and Lake, winter Water, the four turning months Earth and Mountain. Weak: spring Earth and Mountain, summer Heaven and Lake, autumn Thunder and Wind, winter Fire, the turning months Water. Within a day or two of a term boundary, note both months.</small></div>
   <div class="card"><b>How to read it</b><ul style="margin:6px 0 0;padding-left:20px">${v.notes.map(n=>`<li>${n}</li>`).join('')}</ul><small>The grades and the order (體 主, 用 事, 互 the middle, 變 the end) are Shao Yong's. Putting the four looks into one sentence is my construction from them, and is marked so.</small></div>
@@ -745,7 +746,7 @@ function initLearn(){
   $('rand').onclick=()=>{ $('n1').value=1+Math.floor(Math.random()*98); $('n2').value=1+Math.floor(Math.random()*98); $('hr').value=1+Math.floor(Math.random()*12); look=0; drawC4(); };
   drawC4(); const hrs=$('mhr'); hrs.value=12; hrs.onchange=drawMis; drawMis();
   $('replayBtns').innerHTML=REP.map((r,i)=>`<button class="chip" onclick="rep(${i})">${r[0]}</button>`).join(''); rep(0); }
-function drawC1(m){ c1m=m; const r=E.build(6,3,m), I=r.movingIsUpper; const cols=r.lines.map((_,i)=>(i<3)===I?C[E.TRI[r.lower].el]:C[E.TRI[r.upper].el]);
+function drawC1(m){ c1m=m; const r=E.build(6,3,m), I=r.movingIsUpper; const cols=r.lines.map((_,i)=>i<3?C[E.TRI[r.lower].el]:C[E.TRI[r.upper].el]);
   $('c1fig').innerHTML=hexSVG(r.lines,{mv:m,col:cols,tags:[{y:30,t:I?'IT 用':'ME 體',c:I?'#b3281a':'#2b1d10'},{y:134,t:I?'ME 體':'IT 用',c:I?'#2b1d10':'#b3281a'}]})+'<div class="chips" style="width:100%;justify-content:center">'+[1,2,3,4,5,6].map(i=>`<button class="chip ${i===m?'sel':''}" onclick="drawC1(${i});Sound.init();Sound.pluck(220*Math.pow(1.12,${i}),.08)">${i}</button>`).join('')+'</div>';
   $('c1txt').innerHTML=`Floor <b>${m}</b> is breaking, so the ${I?'upper':'lower'} tower is <span class="tag it">IT</span> = ${tn(r.use)}.<br>The other tower is <span class="tag me">ME</span> = ${tn(r.body)}.<br><small>Hexagram ${r.primary.num} <span class="han">${r.primary.han}</span>. You never read the name. You read the two towers.</small>`; }
 function drawFaces(){ let h=''; for(let n=1;n<=8;n++){ const t=E.TRI[n]; h+=`<div class="f ${n===selFace?'sel':''}" onclick="selFace=${n};Sound.init();Sound.tower(${n});drawFaces()"><div class="disp" style="font-size:22px;color:${C[t.el]}">${n}</div>${towerSVG(n,44,36)}<div class="han" style="font-size:20px">${t.han}</div>${eshape(t.el,14)}</div>`; }
