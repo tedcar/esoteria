@@ -660,7 +660,7 @@ function sRead(){
     <div class="chips"><button class="chip" onclick="call('good')">It lands well</button><button class="chip" onclick="call('turn')">It turns</button><button class="chip" onclick="call('bad')">It lands hard</button></div>
     <div class="nav"><button class="alt" onclick="stepBack()">◂ Back</button></div></section></div>`; return; }
   const str=v.strength, SH=SEASON_HAN[mo.season], strTxt={strong:'strong, in season',weak:'weak, out of season',middling:'neither strong nor weak this season'}[str];
-  const callRes = W.call ? (()=>{ const g=['gift','same','win'].includes(r.end.key), s=['gift','same','win'].includes(r.start.key); const truth=g&&s?'good':!g&&!s?'bad':'turn'; const mine=W.call; return mine===truth?'You called it. ✓':`You said <b>${{good:'lands well',bad:'lands hard',turn:'turns'}[mine]}</b>. The figure says <b>${{good:'lands well',bad:'lands hard',turn:'turns'}[truth]}</b>.`; })():'';
+  const callRes = (W.call==='good'||W.call==='bad'||W.call==='turn') ? (()=>{ const g=['gift','same','win'].includes(r.end.key), s=['gift','same','win'].includes(r.start.key); const truth=g&&s?'good':!g&&!s?'bad':'turn'; const mine=W.call; return mine===truth?'You called it. ✓':`You said <b>${{good:'lands well',bad:'lands hard',turn:'turns'}[mine]}</b>. The figure says <b>${{good:'lands well',bad:'lands hard',turn:'turns'}[truth]}</b>.`; })():'';
   const topicLine = T.lines ? (T.lines[r.start.key]||'') : '';
   if(!W.saved){ saveCast(); W.saved=true; Sound.init(); Sound.done(v.pos); Wake.off(); setTimeout(()=>Sound.stopDrone(),6000);
     if(S.level<3){ if(W.score.tot===0||W.score.ok===W.score.tot) S.clean++; else S.clean=0; saveS(); } }
