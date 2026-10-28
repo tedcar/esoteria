@@ -676,7 +676,7 @@ function sRead(){
   <p class="small">Nothing here dates the event. Shao Yong says the same of marriage: ask whether, not when (婚姻亦不過卜其吉凶，不必刻其期也).</p>
   ${S.level>1?`<div class="card small">Practice: <b>${W.score.ok}</b> right first time out of <b>${W.score.tot}</b>.</div>`:''}
   ${up?`<div class="card fadein" style="border-color:var(--cin)"><b>You are ready for the next level.</b><br>${S.level===1?'You have watched a whole cast.':'Two clean casts in a row.'}<div class="row" style="margin-top:8px"><button class="go" onclick="S.level++;S.clean=0;saveS();toast('Level ${S.level+1}: ${LEVELS[S.level+1]}');castHome()">Go to level ${S.level+1}: ${LEVELS[S.level+1]}</button></div></div>`:''}
-  <div class="row mid" style="margin-top:12px"><button class="go" onclick="shareCast('${esc(W.id)}')">Save / share</button><button class="alt" onclick="copyCast('${esc(W.id)}')">Copy as text</button><button class="alt" onclick="castHome()">New cast</button></div></section></div>`; }
+  <div class="nav"><button class="alt" onclick="castHome()">New cast</button><button class="alt" onclick="copyCast('${esc(W.id)}')">Copy</button><button class="go" onclick="shareCast('${esc(W.id)}')">Save / share</button></div></section></div>`; }
 function call(c){ W.call=c; sfx.tap(); keepScroll(renderStep); }
 
 /* ---------------- the book ---------------- */
