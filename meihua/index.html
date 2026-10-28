@@ -77,7 +77,7 @@ input[type=number]{width:96px;text-align:center}
 .prog{display:flex;gap:6px;justify-content:center;margin:2px 0 6px}
 .prog i{width:26px;height:5px;border-radius:3px;background:#6d5a3d55}
 .prog i.d{background:var(--gold)}.prog i.c{background:var(--cin);box-shadow:0 0 8px var(--cin)}
-.nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px;position:sticky;bottom:calc(84px + var(--sab));z-index:5;padding:8px;border-radius:14px;background:rgba(234,220,182,.96);box-shadow:0 -8px 14px -6px rgba(13,10,7,.45)}
 .faces{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .faces .f{text-align:center;cursor:pointer;padding:6px 2px;border:1.5px solid var(--ink);border-radius:10px;background:#fff7}
 .faces .f.sel{outline:3px solid var(--cin)}
